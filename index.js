@@ -30,20 +30,6 @@ const callback = (mutationsList, observer) => {
         ob.observe(vn, { attributes: true, childList: true, subtree: true })
       }
     } // TODO listen to video elements for attribute modification to prevent external modification
-
-    // switch (type) {
-    //   case 'attributes':
-    //     console.log(type, mutation)
-    //     break
-    //   case 'childList':
-    //     console.log(type, mutation)
-    //     break
-    //   case 'subtree':
-    //     console.log(type, mutation)
-    //     break
-    //   default:
-    //     console.log(type, mutation)
-    // }
   }
 };
 
