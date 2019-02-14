@@ -27,7 +27,7 @@ const callback = (mutationsList, observer) => {
         }
         const ob = new MutationObserver(cb)
 
-        ob.observe(vn, { attributes: true })
+        ob.observe(vn, { attributes: true, childList: true, subtree: true })
       }
     } // TODO listen to video elements for attribute modification to prevent external modification
 
