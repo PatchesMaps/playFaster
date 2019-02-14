@@ -2,15 +2,34 @@ function playFaster (speed = 2) {
   [...document.getElementsByTagName('video')].forEach(l => l.playbackRate = speed)
 }
 // Options for the observer (which mutations to observe)
-const config = { attributes: true, childList: true, subtree: true };
+const config = { childList: true };
+
+const nodeIsVideo = n => n.nodeName === 'VIDEO'
 
 // Callback function to execute when mutations are observed
-const callback = function(mutationsList, observer) {
-  for(var mutation of mutationsList) {
+const callback = (mutationsList, observer) => {
+  for(const mutation of mutationsList) {
     console.log(mutation)
     const { type, addedNodes } = mutation
+    const addedNodesArray = Array.from(addedNodes)
 
-    if (addedNodes.find(n => n.nodeName === 'VIDEO')) playFaster() // TODO listen to video elements for attribute modification to prevent external modification
+    if (addedNodesArray.find(nodeIsVideo)) {
+      playFaster()
+      const addedVideoNodes = addedNodesArray.filter(nodeIsVideo)
+
+      for (const vn of addedVideoNodes) {
+        const cb = (mutationsList, observer) => {
+          for(const mut of mutationsList) {
+            const { type } = mut
+
+            console.log(type, mut)
+          }
+        }
+        const ob = new MutationObserver(cb)
+
+        ob.observe(vn, { attributes: true })
+      }
+    } // TODO listen to video elements for attribute modification to prevent external modification
 
     // switch (type) {
     //   case 'attributes':
@@ -29,7 +48,7 @@ const callback = function(mutationsList, observer) {
 };
 
 // Create an observer instance linked to the callback function
-var observer = new MutationObserver(callback);
+const observer = new MutationObserver(callback)
 
 // Start observing the target node for configured mutations
-observer.observe(document.body, config);
+observer.observe(document.body, config)
